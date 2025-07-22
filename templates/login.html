@@ -1,56 +1,77 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Giriş Yap</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='loginbox.css') }}">
+  <meta charset="UTF-8">
+  <title>Giriş Yap</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='loginbox.css') }}">
 </head>
 <body>
-    {% if success %}
-    <div id="success-alert" class="alert alert-success text-center position-absolute w-100" style="top: 30px; left: 0; z-index: 999;">{{ success }}</div>
-    <script>
-      setTimeout(function() {
-        var alert = document.getElementById('success-alert');
-        if(alert) alert.style.display = 'none';
-      }, 5000);
-    </script>
-    {% endif %}
-    <div class="full-center">
-      <div class="auth-row">
-        <div class="login-popup hover-activate">
-          <button class="btn login-btn login-btn-main" type="button" tabindex="0">Giriş Yap</button>
-          <form method="post" class="login-form d-flex flex-column align-items-center justify-content-center">
-            <div class="mb-3 w-100">
-              <label>Kullanıcı Adı</label>
-              <input type="text" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3 w-100">
-              <label>Şifre</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn login-btn">Giriş Yap</button>
-          </form>
+  <div class="box">
+    <div class="login">
+      <!-- Login Form -->
+      <form method="post" class="loginBx" id="loginForm" style="display:flex;">
+        <h2><i class="fas fa-sign-in-alt"></i> LOGIN <i class="fas fa-heart"></i></h2>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Sign in">
+        <div class="group">
+          <a href="#" id="forgotPasswordLink">Forgot Password</a>
+          <a href="#" id="signUpLink" style="color:#ff2770;font-weight:600;">Sign up</a>
         </div>
-        <div class="login-popup hover-activate">
-          <button class="btn login-btn login-btn-main" type="button" tabindex="0">Kayıt Ol</button>
-          <form method="post" action="/register" class="register-form d-flex flex-column align-items-center justify-content-center">
-            <div class="mb-3 w-100">
-              <label>Kullanıcı Adı</label>
-              <input type="text" name="reg_username" class="form-control" required>
-            </div>
-            <div class="mb-3 w-100">
-              <label>Şifre</label>
-              <input type="password" name="reg_password" class="form-control" required>
-            </div>
-            <div class="mb-3 w-100">
-              <label>Şifre Tekrar</label>
-              <input type="password" name="reg_password2" class="form-control" required>
-            </div>
-            <button type="submit" class="btn login-btn">Kayıt Ol</button>
-          </form>
+      </form>
+      <!-- Forgot Password Form -->
+      <form class="loginBx" id="forgotForm" style="display:none;">
+        <h2><i class="fas fa-unlock-alt"></i> RESET PASSWORD</h2>
+        <input type="email" name="reset_email" placeholder="Email address" required>
+        <input type="submit" value="Send Reset Link">
+        <div class="group">
+          <a href="#" id="backToLogin1">Back to Login</a>
         </div>
-      </div>
+      </form>
+      <!-- Sign Up Form -->
+      <form method="post" action="/register" class="loginBx" id="signUpForm" style="display:none;">
+        <h2><i class="fas fa-user-plus"></i> SIGN UP</h2>
+        <input type="text" name="reg_username" placeholder="Username" required>
+        <input type="password" name="reg_password" placeholder="Password" required>
+        <input type="password" name="reg_password2" placeholder="Repeat Password" required>
+        <input type="submit" value="Sign up">
+        <div class="group">
+          <a href="#" id="backToLogin2">Back to Login</a>
+        </div>
+      </form>
     </div>
+  </div>
+  <script>
+    // Formlar arası geçiş
+    const loginForm = document.getElementById('loginForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const signUpForm = document.getElementById('signUpForm');
+    document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      forgotForm.style.display = 'flex';
+      signUpForm.style.display = 'none';
+    });
+    document.getElementById('signUpLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      forgotForm.style.display = 'none';
+      signUpForm.style.display = 'flex';
+    });
+    document.getElementById('backToLogin1').addEventListener('click', function(e) {
+      e.preventDefault();
+      loginForm.style.display = 'flex';
+      forgotForm.style.display = 'none';
+      signUpForm.style.display = 'none';
+    });
+    document.getElementById('backToLogin2').addEventListener('click', function(e) {
+      e.preventDefault();
+      loginForm.style.display = 'flex';
+      forgotForm.style.display = 'none';
+      signUpForm.style.display = 'none';
+    });
+  </script>
 </body>
 </html> 

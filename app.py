@@ -1,12 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 app.secret_key = "gizli_anahtar"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+# Flask-Mail ayarları (Gmail SMTP)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'YOUR_GMAIL@gmail.com'  # <-- Buraya kendi Gmail adresini yaz
+app.config['MAIL_PASSWORD'] = 'YOUR_APP_PASSWORD'     # <-- Buraya Gmail uygulama şifreni yaz
+app.config['MAIL_DEFAULT_SENDER'] = 'YOUR_GMAIL@gmail.com'
+mail = Mail(app)
 
 # Kullanıcı modeli
 class User(db.Model):
@@ -63,6 +73,22 @@ def main():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    return redirect(url_for('login'))
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    email = request.form.get('reset_email')
+    if not email:
+        flash('E-posta adresi gerekli!', 'danger')
+        return redirect(url_for('login'))
+    # Burada gerçek bir kullanıcı kontrolü yapılabilir
+    try:
+        msg = Message('Şifre Sıfırlama', recipients=[email])
+        msg.body = 'Şifre sıfırlama isteğiniz alındı. (Buraya gerçek bir link ekleyebilirsiniz.)'
+        mail.send(msg)
+        flash('Şifre sıfırlama e-postası gönderildi!', 'success')
+    except Exception as e:
+        flash('E-posta gönderilemedi: ' + str(e), 'danger')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
