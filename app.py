@@ -16,9 +16,9 @@ db = SQLAlchemy(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'YOUR_GMAIL@gmail.com'  # <-- Buraya kendi Gmail adresini yaz
-app.config['MAIL_PASSWORD'] = 'YOUR_APP_PASSWORD'     # <-- Buraya Gmail uygulama şifreni yaz
-app.config['MAIL_DEFAULT_SENDER'] = 'YOUR_GMAIL@gmail.com'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
 mail = Mail(app)
 
 # Kullanıcı modeli (güncellenmiş)
@@ -303,10 +303,9 @@ def admin_faq_delete(faq_id):
     return redirect(url_for('admin_faq'))
 
 if __name__ == '__main__':
-    if not os.path.exists('users.db'):
-        with app.app_context():
-            db.create_all()
-            if not User.query.filter_by(username='admin').first():
-                db.session.add(User(username='admin', email='admin@example.com', password='12345678'))
-                db.session.commit()
+    with app.app_context():
+        db.create_all()
+        if not User.query.filter_by(username='admin').first():
+            db.session.add(User(username='admin', email='admin@example.com', password='12345678'))
+            db.session.commit()
     app.run(debug=True) 
