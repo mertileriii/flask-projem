@@ -7,7 +7,8 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 
 app = Flask(__name__)
 app.secret_key = "gizli_anahtar"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# Veritabanı bağlantısı: Önce ortam değişkeni, yoksa SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -60,9 +61,9 @@ def login():
         username_or_email = request.form['username']
         password = request.form['password']
         if len(username_or_email) < 8 or len(password) < 8:
-            error = 'Kullanıcı adı ve şifre en az 8 karakter olmalı.'
+            flash('Kullanıcı adı ve şifre en az 8 karakter olmalı!', 'danger')
         elif username_or_email == 'admin':
-            error = 'Admin kullanıcısı ile giriş yapılamaz.'
+            flash('Admin kullanıcısı ile giriş yapılamaz.', 'danger')
         else:
             user = User.query.filter(
                 ((User.username == username_or_email) | (User.email == username_or_email)) &
@@ -70,23 +71,22 @@ def login():
             ).first()
             if user:
                 if user.banned:
-                    error = 'Bu kullanıcı banlanmıştır.'
+                    flash('Bu kullanıcı banlanmıştır.', 'danger')
                 else:
-                    # Magic link gönder
-                    token = magic_serializer.dumps(user.email, salt='magic-login')
-                    magic_url = url_for('magic_login', token=token, _external=True)
-                    msg = Message('Giriş Doğrulama Linki', recipients=[user.email])
-                    msg.body = f'Giriş yapmak için bu linke tıklayın (10 dakika geçerli): {magic_url}'
-                    mail.send(msg)
-                    session['pending_email'] = user.email
-                    return render_template('login.html', success='Giriş linki e-posta adresinize gönderildi! Lütfen e-postanızı kontrol edin.')
+                    try:
+                        token = magic_serializer.dumps(user.email, salt='magic-login')
+                        magic_url = url_for('magic_login', token=token, _external=True)
+                        msg = Message('Giriş Doğrulama Linki', recipients=[user.email])
+                        msg.body = f'Giriş yapmak için bu linke tıklayın (10 dakika geçerli): {magic_url}'
+                        mail.send(msg)
+                        session['pending_email'] = user.email
+                        flash('Giriş linki e-posta adresinize gönderildi! Lütfen e-postanızı kontrol edin.', 'success')
+                    except Exception as e:
+                        flash('E-posta gönderilemedi: ' + str(e), 'danger')
             else:
-                error = 'Hatalı kullanıcı adı/e-posta veya şifre!'
-    if request.method == 'POST':
-        return render_template('login.html', error=error, success=success)
-    if success:
-        return render_template('login.html', success=success)
-    return render_template('login.html')
+                flash('Hatalı kullanıcı adı/e-posta veya şifre!', 'danger')
+        return redirect(url_for('login'))
+    return render_template('login.html', success=success)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -95,30 +95,32 @@ def register():
     password = request.form.get('reg_password')
     password2 = request.form.get('reg_password2')
     if not username or not email or not password or not password2:
-        session['success'] = 'Tüm alanları doldurun!'
+        flash('Tüm alanları doldurun!', 'danger')
         return redirect(url_for('login'))
     if len(username) < 8 or len(password) < 8:
-        session['success'] = 'Kullanıcı adı ve şifre en az 8 karakter olmalı!'
+        flash('Kullanıcı adı ve şifre en az 8 karakter olmalı!', 'danger')
         return redirect(url_for('login'))
     if password != password2:
-        session['success'] = 'Şifreler eşleşmiyor!'
+        flash('Şifreler eşleşmiyor!', 'danger')
         return redirect(url_for('login'))
     if User.query.filter_by(username=username).first():
-        session['success'] = 'Bu kullanıcı adı zaten alınmış!'
+        flash('Bu kullanıcı adı zaten alınmış!', 'danger')
         return redirect(url_for('login'))
     if User.query.filter_by(email=email).first():
-        session['success'] = 'Bu e-posta adresi zaten kayıtlı!'
+        flash('Bu e-posta adresi zaten kayıtlı!', 'danger')
         return redirect(url_for('login'))
-    new_user = User(username=username, email=email, password=password, email_verified=False)
-    db.session.add(new_user)
-    db.session.commit()
-    # Doğrulama e-postası gönder
-    token = serializer.dumps(email, salt='email-verify')
-    verify_url = url_for('verify_email', token=token, _external=True)
-    msg = Message('E-posta Doğrulama', recipients=[email])
-    msg.body = f'E-posta adresinizi doğrulamak için şu linke tıklayın: {verify_url}'
-    mail.send(msg)
-    session['success'] = 'Kayıt başarılı! Lütfen e-posta adresinizi doğrulayın.'
+    try:
+        new_user = User(username=username, email=email, password=password, email_verified=False)
+        db.session.add(new_user)
+        db.session.commit()
+        token = serializer.dumps(email, salt='email-verify')
+        verify_url = url_for('verify_email', token=token, _external=True)
+        msg = Message('E-posta Doğrulama', recipients=[email])
+        msg.body = f'E-posta adresinizi doğrulamak için şu linke tıklayın: {verify_url}'
+        mail.send(msg)
+        flash('Kayıt başarılı! Lütfen e-posta adresinizi doğrulayın.', 'success')
+    except Exception as e:
+        flash('Kayıt veya e-posta gönderimi sırasında hata oluştu: ' + str(e), 'danger')
     return redirect(url_for('login'))
 
 @app.route('/verify-email/<token>')
@@ -304,8 +306,7 @@ if __name__ == '__main__':
     if not os.path.exists('users.db'):
         with app.app_context():
             db.create_all()
-            # Varsayılan bir kullanıcı ekle (admin/1234)
             if not User.query.filter_by(username='admin').first():
-                db.session.add(User(username='admin', email='admin@example.com', password='1234'))
+                db.session.add(User(username='admin', email='admin@example.com', password='12345678'))
                 db.session.commit()
     app.run(debug=True) 

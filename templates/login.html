@@ -10,8 +10,18 @@
 <body>
   <div class="box">
     <div style="text-align:center; margin-bottom:20px;">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:120px; max-height:120px;">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:120px; max-height:120px;" onerror="this.style.display='none';document.getElementById('logoWarning').style.display='block';">
+      <div id="logoWarning" style="display:none; color:#ff4d4d; font-weight:600;">Logo yüklenemedi!</div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom:20px;">
+          {% for category, message in messages %}
+            <div style="padding:10px; border-radius:8px; margin-bottom:8px; color:#fff; background:{% if category == 'danger' %}#d7263d{% elif category == 'success' %}#45f3ff{% else %}#333{% endif %}; font-weight:600; text-align:center;">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
     <div class="login">
       <!-- Login Form -->
       <form method="post" class="loginBx" id="loginForm" style="display:flex;">
