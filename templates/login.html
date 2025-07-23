@@ -2,13 +2,16 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Giriş Yap</title>
+  <title>Sibercinin Işıltılı Evreni</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='loginbox.css') }}">
 </head>
 <body>
   <div class="box">
+    <div style="text-align:center; margin-bottom:20px;">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="max-width:120px; max-height:120px;">
+    </div>
     <div class="login">
       <!-- Login Form -->
       <form method="post" class="loginBx" id="loginForm" style="display:flex;">
