@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SSS Yönet</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap">
+    <style>
+        body { background: #181818; color: #fff; font-family: 'Poppins', sans-serif; }
+        .container { max-width: 700px; margin: 40px auto; background: #23232b; border-radius: 16px; padding: 2rem; }
+        h1 { text-align: center; margin-bottom: 2rem; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 1rem; background: #29293a; padding: 1rem; border-radius: 8px; }
+        a { color: #ffb300; text-decoration: none; }
+        a:hover { color: #ff8800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SSS Yönet</h1>
+        <ul>
+            {% for faq in faqs %}
+            <li><strong>{{ faq.question }}</strong><br>{{ faq.answer }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/admin">Admin Paneline Dön</a>
+    </div>
+</body>
+</html> 

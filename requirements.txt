@@ -1,3 +1,4 @@
 Flask-Mail
 gunicorn
 flask_sqlalchemy
+image.png
