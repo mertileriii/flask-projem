@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -6,9 +6,22 @@ import os
 import json
 from datetime import datetime
 import requests
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
+
+# Admin şifresi (güvenlik için değiştir!)
+ADMIN_PASSWORD = 'admin123'
+
+def login_required(f):
+    """Admin sayfaları için login kontrolü"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Ziyaretçi logları için dosya
 VISITOR_LOG_FILE = 'visitor_logs.json'
@@ -215,7 +228,29 @@ def send_email():
         flash('Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.', 'error')
         return redirect(url_for('main'))
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    """Admin login sayfası"""
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            flash('Başarıyla giriş yaptınız!', 'success')
+            return redirect(url_for('view_logs'))
+        else:
+            flash('Yanlış şifre!', 'error')
+    
+    return render_template('admin_login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    """Admin logout"""
+    session.pop('admin_logged_in', None)
+    flash('Çıkış yaptınız!', 'success')
+    return redirect(url_for('main'))
+
 @app.route('/admin/logs')
+@login_required
 def view_logs():
     """Ziyaretçi loglarını görüntüle"""
     try:
@@ -233,6 +268,7 @@ def view_logs():
     return render_template('admin_logs.html', logs=logs)
 
 @app.route('/admin/stats')
+@login_required
 def view_stats():
     """Ziyaretçi istatistiklerini görüntüle"""
     try:

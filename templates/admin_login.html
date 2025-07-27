@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Girişi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        .form-control {
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+        .form-control:focus {
+            background: #000;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            color: #00ff00;
+        }
+        .btn-login {
+            background: #00ff00;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            padding: 0.75rem;
+        }
+        .btn-login:hover {
+            background: #00ffff;
+            color: #000;
+        }
+        .alert {
+            border: 1px solid #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+        }
+        .alert-error {
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-title">🔐 Admin Girişi</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {% if category == 'error' %}alert-error{% endif %} mb-3">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST">
+            <div class="mb-3">
+                <label for="password" class="form-label">🔑 Şifre:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-login">🚀 Giriş Yap</button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <a href="/" class="text-decoration-none" style="color: #00ff00;">🏠 Ana Sayfaya Dön</a>
+        </div>
+    </div>
+</body>
+</html> 
