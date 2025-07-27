@@ -244,7 +244,7 @@ function createParticleExplosion(element) {
             
             if (opacity > 0) {
                 requestAnimationFrame(animateParticle);
-            } else {
+        } else {
                 document.body.removeChild(particle);
             }
         }
