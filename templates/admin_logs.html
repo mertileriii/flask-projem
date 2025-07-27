@@ -71,7 +71,7 @@
                         <tbody>
                             {% for log in logs %}
                             <tr>
-                                <td>{{ log.timestamp.split('T')[0] }} {{ log.timestamp.split('T')[1][:8] }}</td>
+                                <td>{{ log.timestamp }}</td>
                                 <td><code>{{ log.ip_address }}</code></td>
                                 <td><small>{{ log.user_agent[:50] }}...</small></td>
                                 <td>{{ log.referrer }}</td>

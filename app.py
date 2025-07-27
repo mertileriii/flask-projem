@@ -71,7 +71,7 @@ def log_visitor(ip_address, user_agent, referrer=None):
         'ip_address': ip_address,
         'user_agent': user_agent,
         'referrer': referrer,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'country': location['country'],
         'city': location['city'],
         'region': location['region'],
