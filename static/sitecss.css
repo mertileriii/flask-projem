@@ -32,29 +32,6 @@ a:hover {
     color: orange;
 }
 
-/* Fareyi takip eden turuncu arka plan efekti */
-#mouse-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 0;
-    background: transparent;
-}
-
-#mouse-bg .circle {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: orange;
-    opacity: 0.15;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: left 0.08s linear, top 0.08s linear;
-}
-
 main, .container, .navbar, footer {
     position: relative;
     z-index: 1;

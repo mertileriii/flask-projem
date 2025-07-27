@@ -30,17 +30,93 @@
             max-width: 1200px;
         }
         .catalog-card {
-            background: #181818;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-            border: 1.5px solid #333;
+            border: 2px solid #00ff00;
             padding: 2.5rem 2rem;
             margin: 2rem auto;
             max-width: 600px;
             color: #fff;
             opacity: 0;
             transform: translateX(-80px);
-            transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 10px rgba(0, 255, 0, 0.3),
+                0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .catalog-card:hover {
+            border-color: #00ffff;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.5),
+                0 0 40px rgba(0, 255, 255, 0.3);
+        }
+        
+        .catalog-card h2 {
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .catalog-card p {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Terminal efekti */
+        .catalog-card {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            border: 2px solid #00ff00;
+            box-shadow: 
+                0 0 10px rgba(0, 255, 0, 0.3),
+                0 0 20px rgba(0, 255, 0, 0.2),
+                inset 0 0 20px rgba(0, 255, 0, 0.1);
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            perspective: 1000px;
+        }
+        
+        .catalog-card:hover {
+            transform: translateY(-20px) rotateX(15deg) rotateY(10deg) scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0, 255, 0, 0.6),
+                0 0 50px rgba(0, 255, 0, 0.5),
+                inset 0 0 50px rgba(0, 255, 0, 0.4);
+        }
+        
+        .catalog-card h2 {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .catalog-card p, .catalog-card span, .catalog-card div {
+            color: #00ff00;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            line-height: 1.6;
+        }
+        
+        /* Blinking cursor efekti */
+        .catalog-card h2::after {
+            content: '|';
+            color: #00ff00;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+
+        
+        .catalog-card h2,
+        .catalog-card p,
+        .catalog-card div {
+            position: relative;
+            z-index: 1;
         }
         .catalog-card.visible {
             opacity: 1;
@@ -55,33 +131,27 @@
             padding: 0;
         }
         .project-list li {
-            background: #222;
-            border-radius: 10px;
             margin-bottom: 1rem;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: background 0.2s;
+            padding: 1rem;
+            background: #29293a;
+            border-radius: 8px;
+            border-left: 4px solid #ffb300;
         }
         .project-list li:hover {
             background: #333;
+            transform: translateX(5px);
+            transition: all 0.3s ease;
         }
         .project-list a {
             color: orange;
             text-decoration: underline;
         }
         .ig-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
+            margin-top: 2rem;
         }
         .ig-link a {
-            color: #fff;
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            transition: color 0.2s;
-        }
-        .ig-link a:hover {
+            font-size: 3rem;
             color: #fd5949;
         }
         .ig-username {
@@ -89,10 +159,329 @@
             color: #fff;
             text-align: center;
         }
+        
+        /* Matrix Code Rain Effect */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Ensure content is above matrix effect */
+        body {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar, .hero, .catalog-card, footer {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Navbar'ı tamamen şeffaf yap */
+        .navbar {
+            background: transparent !important;
+        }
+        
+        .navbar.bg-dark {
+            background: transparent !important;
+        }
+        
+        /* Hero bölümü için özel ayar - arkasından kod süzmesi görünsün */
+        .hero {
+            background: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(1px);
+            z-index: 1 !important;
+        }
+        
+        .hero-title {
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3); }
+            to { text-shadow: 0 0 30px rgba(0, 255, 0, 0.8), 0 0 60px rgba(0, 255, 0, 0.5), 0 0 80px rgba(0, 255, 0, 0.3); }
+        }
+        
+        /* Proje kartları */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .project-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.3);
+            border-color: rgba(0, 255, 0, 0.6);
+        }
+        
+        .project-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .project-card h3 {
+            color: #00ff00;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .project-card p {
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tech-tag {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(0, 255, 0, 0.4);
+        }
+        
+
+        
+        /* Contact form */
+        .contact-form {
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(0, 255, 0, 0.3);
+            color: #00ff00;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-bottom-color: #00ff00;
+        }
+        
+        .form-group label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0;
+            color: rgba(0, 255, 0, 0.6);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .form-group input:focus + label,
+        .form-group textarea:focus + label,
+        .form-group input:valid + label,
+        .form-group textarea:valid + label {
+            top: -1.5rem;
+            font-size: 0.8rem;
+            color: #00ff00;
+        }
+        
+        .form-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ff00;
+            transition: width 0.3s ease;
+        }
+        
+        .form-group input:focus ~ .form-line,
+        .form-group textarea:focus ~ .form-line {
+            width: 100%;
+        }
+        
+        .submit-btn {
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Sosyal medya linkleri */
+        .social-links {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        .social-title {
+            color: #00ff00;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #00ff00;
+            text-decoration: none;
+            padding: 1rem;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(0, 255, 0, 0.05);
+        }
+        
+        .social-link:hover {
+            color: #00ff00;
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .social-link i {
+            font-size: 1.5rem;
+        }
+        
+        .social-link span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .social-link.instagram:hover {
+            border-color: #e4405f;
+            box-shadow: 0 0 20px rgba(228, 64, 95, 0.3);
+        }
+        
+
+        
+        /* Interactive Terminal */
+        .terminal-section {
+            margin-top: 2rem;
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca3f; }
+        
+        .terminal-title {
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .terminal-content {
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .terminal-output {
+            margin-bottom: 1rem;
+            color: #00ffff;
+            animation: fadeIn 0.5s ease 0.5s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .catalog-card {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="mouse-bg"><div class="circle"></div></div>
+    <!-- Matrix Background Canvas -->
+    <canvas id="matrix-bg"></canvas>
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-wide container-fluid">
         <!-- <a class="navbar-brand" href="#">SELAMİ MERT İLERİ</a> -->
@@ -119,58 +508,105 @@
     <div class="catalog-card" id="about">
         <h2>Hakkımda</h2>
         <p class="text-center">Merhaba! Ben Selami Mert İleri. Yazılım geliştirme, web teknolojileri ve Python ile ilgileniyorum. Kendi projelerimi geliştiriyor ve yeni teknolojileri öğrenmeyi seviyorum.</p>
+        
+        <!-- Interactive Terminal -->
+        <div class="terminal-section">
+            <div class="terminal-header">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <span class="terminal-title">terminal@portfolio:~$</span>
+            </div>
+            <div class="terminal-content">
+                <div class="terminal-line">$ whoami</div>
+                <div class="terminal-output">selami_mert_ileri</div>
+                <div class="terminal-line">$ ls -la</div>
+                <div class="terminal-output">drwxr-xr-x projects/</div>
+                <div class="terminal-output">drwxr-xr-x skills/</div>
+                <div class="terminal-output">drwxr-xr-x contact/</div>
+                <div class="terminal-line">$ cat about.txt</div>
+                <div class="terminal-output">Python Developer | Web Technologies | Cybersecurity Enthusiast</div>
+            </div>
+        </div>
     </div>
 
     <div class="catalog-card" id="projects">
         <h2>Projeler</h2>
-    </div>
-
-    <div class="catalog-card">
-        <div style="background:#fffbe6; border-radius:8px; padding:0.5rem 1rem; display:inline-block; margin-bottom:1rem; border:1.5px solid #ffd700;">
-            <span style="color:#d7263d; font-weight:600; font-size:1.3rem; letter-spacing:1px;">SQL INJECTION SİTESİ HAKKINDA</span>
-        </div>
-        <div style="margin-top:1rem;">
-            <span style="font-style:italic;">
-Şuan içerisinde bulunduğunuz sitenin ne sitesi olduğunun hiçbir önemi yok. İlk aklımda gelen kendi otobiyografimi yaptığım bir site kurmaktı. Ve bu da oldu.<br>
-Ama asıl proje bu sitenin zafiyetli bir site olmasıydı. Şuan içerisinde olduğunuz siteyi ilk kurduğumda OWASP TOP TEN açıklarının birçoğuna sahipti ve bunlara tek tek sızarak olduğunuz siteyi güvenli hale getirdim.<br>
-Şuan sitede ssl sertifikası mevcut ve https olarak sunuluyor.
-            </span>
-        </div>
-    </div>
-
-    <div class="catalog-card">
-        <div style="background:#fffbe6; border-radius:8px; padding:0.5rem 1rem; display:inline-block; margin-bottom:1rem; border:1.5px solid #ffd700;">
-            <span style="color:#d7263d; font-weight:600; font-size:1.3rem; letter-spacing:1px;">LUCID DREAMING</span>
-        </div>
-        <div style="margin-top:1rem;">
-            <span style="color:#d2691e; font-style:italic; font-weight:600;">Lucid Dreaming nedir?</span><br>
-            <span style="font-style:italic;">Kısaca kontrollü rüya demektir. Rüyayı gören kişinin rüya gördüğünü bilinçli olarak fark etmesi durumudur.<br>
-            Bu projemde lucid dereaming'i tetikleyen şeyleri araştırarak, bilerek o rüya evrenine geçiş yapmayı amaçlıyorum.<br>
-            Rüyalar alemine girmeden önce lucid'e girmek isteyen kişi belirli teçhizatlarla kuşanıyor. Kurduğum sistem; sensörlerle ve algılayıcılarla beraber uykuya girdiğini anlıyor. Lucid'i tetikleyen etkenleri sağlıyor. Ve artık rüyaya bilinçli giren kişi rüyasında gerçek hayatta korktuğu, anksiyetelendiği her şeyi yapmakta özgür!</span>
-        </div>
-    </div>
-
-    <div class="catalog-card">
-        <div style="background:#fffbe6; border-radius:8px; padding:0.5rem 1rem; display:inline-block; margin-bottom:1rem; border:1.5px solid #ffd700;">
-            <span style="color:#d7263d; font-weight:600; font-size:1.3rem; letter-spacing:1px;">YENİ ÜRÜN SATIŞ POLİTİKASI</span>
-        </div>
-        <div style="margin-top:1rem;">
-            <span style="font-style:italic;">Bu projede marketlere ve kafelere (isterse marka satın alan isterse bireysel kafelere isterse content kafelere) özgünlük geliyor!<br>
-            Yeni çıkardığımız bu ürün sayesinde satışlarınız artacak. Gelen kitleniz her daim değişecek.<br><br>
-            Ürünümüz bir şeffaf kutu içerisinde raflarınıza geliyor; istediğiniz aromayla beraber satışlarınıza sunuluyor. Ürünümüzde dilediğiniz meyveyi dilediğiniz şekilde sokarak sizin hayal gücünüzle birleştirilen bir içecek oluyor ve hayat buluyor.<br><br>
-            Tek yapmanız gereken kutu içerisinden çıkan mükemmel bardağın içindeki dilemiş olduğunuz şekildeki meyve içerisine kutunun diğer bölmesinde bulunan içeceğinizi dökerek karıştırmak. Dilediğiniz yerde parkta, evde, iş yerinizde; yanınızdaki değerli arkadaşınızla beraber zamanınızı güzelleştirebildiğimiz için çok mutluyuz. Afiyet Olsun!</span>
+        <div class="project-grid">
+            <div class="project-card">
+                <div class="project-icon">🔒</div>
+                <h3>SQL Injection Site</h3>
+                <p>OWASP Top 10 açıklarını gösteren eğitim sitesi</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Flask</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">SQLite</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <div class="project-icon">🌙</div>
+                <h3>Lucid Dreaming</h3>
+                <p>Kontrollü rüya tetikleyici sistem</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Arduino</span>
+                    <span class="tech-tag">Sensors</span>
+                    <span class="tech-tag">IoT</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <div class="project-icon">☕</div>
+                <h3>Yeni Ürün Politikası</h3>
+                <p>Kafe ve marketler için özgün içecek sistemi</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Marketing</span>
+                    <span class="tech-tag">Innovation</span>
+                    <span class="tech-tag">Business</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="catalog-card mb-5" id="contact">
+
+
+    <div class="catalog-card" id="contact">
         <h2>İletişim</h2>
-        <div class="ig-link">
-            <a href="https://instagram.com/mertileriii_" target="_blank" title="Instagram">
+        <form class="contact-form" action="/send-email" method="POST">
+            <div class="form-group">
+                <input type="text" id="name" name="name" required>
+                <label for="name">Adınız</label>
+                <div class="form-line"></div>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" id="email" name="email" required>
+                <label for="email">E-posta</label>
+                <div class="form-line"></div>
+            </div>
+            
+            <div class="form-group">
+                <textarea id="message" name="message" rows="5" required></textarea>
+                <label for="message">Mesajınız</label>
+                <div class="form-line"></div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <span>Gönder</span>
+                <div class="btn-particles"></div>
+            </button>
+        </form>
+        
+        <div class="social-links">
+            <div class="social-title">Sosyal Medya</div>
+            <a href="https://instagram.com/mertileriii_" target="_blank" class="social-link instagram">
                 <i class="bi bi-instagram"></i>
+                <span>@mertileriii_</span>
             </a>
-            <div class="ig-username">@mertileriii_</div>
         </div>
     </div>
+
+
 
     <footer class="text-center">
         &copy; 2025 Cyber Security for Everyone
