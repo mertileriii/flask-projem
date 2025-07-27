@@ -87,7 +87,16 @@
                                     {% endif %}
                                 </td>
                                 <td><small>{{ log.get('isp', 'Unknown')[:30] }}...</small></td>
-                                <td>{{ '✅' if log.get('mobile', False) else '❌' }}</td>
+                                <td>
+                                    {% if log.get('mobile', False) %}
+                                        ✅ Mobil
+                                        {% if log.get('accuracy_note') %}
+                                            <br><small style="color: #ff6b6b;">⚠️ {{ log.get('accuracy_note') }}</small>
+                                        {% endif %}
+                                    {% else %}
+                                        ❌ Desktop
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

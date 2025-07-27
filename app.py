@@ -41,8 +41,8 @@ def get_location_from_ip(ip_address):
         }
     
     try:
-        # Ücretsiz IP geolocation API'si - daha detaylı bilgi için
-        response = requests.get(f'http://ip-api.com/json/{ip_address}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,mobile,proxy,hosting', timeout=5)
+        # Daha doğru IP geolocation API'si
+        response = requests.get(f'http://ip-api.com/json/{ip_address}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,mobile,proxy,hosting&lang=tr', timeout=5)
         if response.status_code == 200:
             data = response.json()
             if data.get('status') == 'success':
@@ -61,6 +61,10 @@ def get_location_from_ip(ip_address):
                 lat = data.get('lat')
                 lon = data.get('lon')
                 
+                # ISP bilgisini kontrol et (mobil internet tespiti)
+                isp = data.get('isp', 'Unknown')
+                is_mobile_isp = any(mobile_keyword in isp.lower() for mobile_keyword in ['mobil', 'mobile', 'gsm', '3g', '4g', '5g'])
+                
                 return {
                     'country': data.get('country', 'Unknown'),
                     'city': city,
@@ -68,13 +72,14 @@ def get_location_from_ip(ip_address):
                     'district': district,
                     'detailed_location': detailed_location,
                     'timezone': data.get('timezone', 'Unknown'),
-                    'isp': data.get('isp', 'Unknown'),
+                    'isp': isp,
                     'latitude': lat if lat and lat != 0 else None,
                     'longitude': lon if lon and lon != 0 else None,
                     'zip_code': data.get('zip', 'Unknown'),
-                    'mobile': data.get('mobile', False),
+                    'mobile': data.get('mobile', False) or is_mobile_isp,
                     'proxy': data.get('proxy', False),
-                    'hosting': data.get('hosting', False)
+                    'hosting': data.get('hosting', False),
+                    'accuracy_note': 'Mobil internet kullanıyorsanız konum operatör merkezini gösterebilir'
                 }
     except Exception as e:
         print(f"IP geolocation error: {e}")
