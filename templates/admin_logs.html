@@ -62,10 +62,11 @@
                                 <th>📱 User Agent</th>
                                 <th>🔗 Referrer</th>
                                 <th>🌍 Ülke</th>
-                                <th>🏙️ Şehir</th>
+                                <th>🏙️ Detaylı Konum</th>
                                 <th>🏛️ Bölge</th>
-                                <th>⏰ Saat Dilimi</th>
+                                <th>📍 Koordinatlar</th>
                                 <th>🏢 ISP</th>
+                                <th>📱 Mobil</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,10 +77,11 @@
                                 <td><small>{{ log.user_agent[:50] }}...</small></td>
                                 <td>{{ log.referrer }}</td>
                                 <td>{{ log.get('country', 'Unknown') }}</td>
-                                <td>{{ log.get('city', 'Unknown') }}</td>
+                                <td>{{ log.get('detailed_location', log.get('city', 'Unknown')) }}</td>
                                 <td>{{ log.get('region', 'Unknown') }}</td>
-                                <td>{{ log.get('timezone', 'Unknown') }}</td>
+                                <td>{{ log.get('latitude', 'Unknown') }}, {{ log.get('longitude', 'Unknown') }}</td>
                                 <td><small>{{ log.get('isp', 'Unknown')[:30] }}...</small></td>
+                                <td>{{ '✅' if log.get('mobile', False) else '❌' }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

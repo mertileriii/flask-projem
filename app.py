@@ -21,6 +21,7 @@ def get_location_from_ip(ip_address):
             'country': 'Local',
             'city': 'Local',
             'region': 'Local',
+            'district': 'Local',
             'timezone': 'Local',
             'isp': 'Local'
         }
@@ -34,22 +35,42 @@ def get_location_from_ip(ip_address):
             'country': 'Unknown',
             'city': 'Unknown',
             'region': 'Unknown',
+            'district': 'Unknown',
             'timezone': 'Unknown',
             'isp': 'Unknown'
         }
     
     try:
-        # Ücretsiz IP geolocation API'si
-        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=5)
+        # Ücretsiz IP geolocation API'si - daha detaylı bilgi için
+        response = requests.get(f'http://ip-api.com/json/{ip_address}?fields=status,message,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,isp,org,as,mobile,proxy,hosting', timeout=5)
         if response.status_code == 200:
             data = response.json()
             if data.get('status') == 'success':
+                # İlçe bilgisini al (district)
+                district = data.get('district', '')
+                city = data.get('city', 'Unknown')
+                region = data.get('regionName', 'Unknown')
+                
+                # Eğer ilçe varsa, şehir + ilçe formatında göster
+                if district and district != city:
+                    detailed_location = f"{city}, {district}"
+                else:
+                    detailed_location = city
+                
                 return {
                     'country': data.get('country', 'Unknown'),
-                    'city': data.get('city', 'Unknown'),
-                    'region': data.get('regionName', 'Unknown'),
+                    'city': city,
+                    'region': region,
+                    'district': district,
+                    'detailed_location': detailed_location,
                     'timezone': data.get('timezone', 'Unknown'),
-                    'isp': data.get('isp', 'Unknown')
+                    'isp': data.get('isp', 'Unknown'),
+                    'latitude': data.get('lat', 'Unknown'),
+                    'longitude': data.get('lon', 'Unknown'),
+                    'zip_code': data.get('zip', 'Unknown'),
+                    'mobile': data.get('mobile', False),
+                    'proxy': data.get('proxy', False),
+                    'hosting': data.get('hosting', False)
                 }
     except Exception as e:
         print(f"IP geolocation error: {e}")
@@ -58,8 +79,16 @@ def get_location_from_ip(ip_address):
         'country': 'Unknown',
         'city': 'Unknown',
         'region': 'Unknown',
+        'district': 'Unknown',
+        'detailed_location': 'Unknown',
         'timezone': 'Unknown',
-        'isp': 'Unknown'
+        'isp': 'Unknown',
+        'latitude': 'Unknown',
+        'longitude': 'Unknown',
+        'zip_code': 'Unknown',
+        'mobile': False,
+        'proxy': False,
+        'hosting': False
     }
 
 def log_visitor(ip_address, user_agent, referrer=None):
@@ -75,8 +104,16 @@ def log_visitor(ip_address, user_agent, referrer=None):
         'country': location['country'],
         'city': location['city'],
         'region': location['region'],
+        'district': location['district'],
+        'detailed_location': location['detailed_location'],
         'timezone': location['timezone'],
-        'isp': location['isp']
+        'isp': location['isp'],
+        'latitude': location['latitude'],
+        'longitude': location['longitude'],
+        'zip_code': location['zip_code'],
+        'mobile': location['mobile'],
+        'proxy': location['proxy'],
+        'hosting': location['hosting']
     }
     
     # Mevcut logları oku
