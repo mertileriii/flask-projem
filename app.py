@@ -25,6 +25,19 @@ def get_location_from_ip(ip_address):
             'isp': 'Local'
         }
     
+    # Requests kütüphanesi yüklü mü kontrol et
+    try:
+        import requests
+    except ImportError:
+        print("Requests kütüphanesi yüklü değil!")
+        return {
+            'country': 'Unknown',
+            'city': 'Unknown',
+            'region': 'Unknown',
+            'timezone': 'Unknown',
+            'isp': 'Unknown'
+        }
+    
     try:
         # Ücretsiz IP geolocation API'si
         response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=5)
