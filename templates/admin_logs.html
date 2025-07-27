@@ -75,11 +75,11 @@
                                 <td><code>{{ log.ip_address }}</code></td>
                                 <td><small>{{ log.user_agent[:50] }}...</small></td>
                                 <td>{{ log.referrer }}</td>
-                                <td>{{ log.country }}</td>
-                                <td>{{ log.city }}</td>
-                                <td>{{ log.region }}</td>
-                                <td>{{ log.timezone }}</td>
-                                <td><small>{{ log.isp[:30] }}...</small></td>
+                                <td>{{ log.get('country', 'Unknown') }}</td>
+                                <td>{{ log.get('city', 'Unknown') }}</td>
+                                <td>{{ log.get('region', 'Unknown') }}</td>
+                                <td>{{ log.get('timezone', 'Unknown') }}</td>
+                                <td><small>{{ log.get('isp', 'Unknown')[:30] }}...</small></td>
                             </tr>
                             {% endfor %}
                         </tbody>
