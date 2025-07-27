@@ -79,7 +79,13 @@
                                 <td>{{ log.get('country', 'Unknown') }}</td>
                                 <td>{{ log.get('detailed_location', log.get('city', 'Unknown')) }}</td>
                                 <td>{{ log.get('region', 'Unknown') }}</td>
-                                <td>{{ log.get('latitude', 'Unknown') }}, {{ log.get('longitude', 'Unknown') }}</td>
+                                <td>
+                                    {% if log.get('latitude') and log.get('longitude') %}
+                                        {{ "%.4f"|format(log.get('latitude')|float) }}, {{ "%.4f"|format(log.get('longitude')|float) }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
                                 <td><small>{{ log.get('isp', 'Unknown')[:30] }}...</small></td>
                                 <td>{{ '✅' if log.get('mobile', False) else '❌' }}</td>
                             </tr>

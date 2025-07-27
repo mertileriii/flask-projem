@@ -57,6 +57,10 @@ def get_location_from_ip(ip_address):
                 else:
                     detailed_location = city
                 
+                # Koordinatları kontrol et
+                lat = data.get('lat')
+                lon = data.get('lon')
+                
                 return {
                     'country': data.get('country', 'Unknown'),
                     'city': city,
@@ -65,8 +69,8 @@ def get_location_from_ip(ip_address):
                     'detailed_location': detailed_location,
                     'timezone': data.get('timezone', 'Unknown'),
                     'isp': data.get('isp', 'Unknown'),
-                    'latitude': data.get('lat', 'Unknown'),
-                    'longitude': data.get('lon', 'Unknown'),
+                    'latitude': lat if lat and lat != 0 else None,
+                    'longitude': lon if lon and lon != 0 else None,
                     'zip_code': data.get('zip', 'Unknown'),
                     'mobile': data.get('mobile', False),
                     'proxy': data.get('proxy', False),
