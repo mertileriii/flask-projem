@@ -177,6 +177,9 @@ def view_logs():
             logs = json.load(f)
     except FileNotFoundError:
         logs = []
+    except Exception as e:
+        print(f"Logs error: {e}")
+        logs = []
     
     # Logları ters sırala (en yeni üstte)
     logs.reverse()
@@ -190,6 +193,9 @@ def view_stats():
         with open(VISITOR_LOG_FILE, 'r', encoding='utf-8') as f:
             logs = json.load(f)
     except FileNotFoundError:
+        logs = []
+    except Exception as e:
+        print(f"Stats error: {e}")
         logs = []
     
     # İstatistikler
