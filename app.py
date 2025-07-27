@@ -15,9 +15,19 @@ VISITOR_LOG_FILE = 'visitor_logs.json'
 
 def get_location_from_ip(ip_address):
     """IP adresinden konum bilgisi al"""
+    # Localhost ve private IP'ler için
+    if ip_address in ['127.0.0.1', 'localhost'] or ip_address.startswith('192.168.') or ip_address.startswith('10.'):
+        return {
+            'country': 'Local',
+            'city': 'Local',
+            'region': 'Local',
+            'timezone': 'Local',
+            'isp': 'Local'
+        }
+    
     try:
         # Ücretsiz IP geolocation API'si
-        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=3)
+        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=5)
         if response.status_code == 200:
             data = response.json()
             if data.get('status') == 'success':
@@ -28,8 +38,8 @@ def get_location_from_ip(ip_address):
                     'timezone': data.get('timezone', 'Unknown'),
                     'isp': data.get('isp', 'Unknown')
                 }
-    except:
-        pass
+    except Exception as e:
+        print(f"IP geolocation error: {e}")
     
     return {
         'country': 'Unknown',
