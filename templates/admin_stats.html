@@ -84,7 +84,7 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-12">
+            <div class="col-md-6">
                 <div class="stats-card">
                     <h3>🏆 En Çok Ziyaret Eden IP'ler</h3>
                     <div class="table-responsive">
@@ -99,6 +99,56 @@
                                 {% for ip, count in stats.top_ips %}
                                 <tr>
                                     <td><code>{{ ip }}</code></td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h3>🌍 En Çok Ziyaret Eden Ülkeler</h3>
+                    <div class="table-responsive">
+                        <table class="table table-dark ip-table">
+                            <thead>
+                                <tr>
+                                    <th>🌍 Ülke</th>
+                                    <th>📊 Ziyaret Sayısı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for country, count in stats.top_countries %}
+                                <tr>
+                                    <td>{{ country }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="stats-card">
+                    <h3>🏙️ En Çok Ziyaret Eden Şehirler</h3>
+                    <div class="table-responsive">
+                        <table class="table table-dark ip-table">
+                            <thead>
+                                <tr>
+                                    <th>🏙️ Şehir</th>
+                                    <th>📊 Ziyaret Sayısı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for city, count in stats.top_cities %}
+                                <tr>
+                                    <td>{{ city }}</td>
                                     <td>{{ count }}</td>
                                 </tr>
                                 {% endfor %}

@@ -5,6 +5,7 @@ from email.mime.multipart import MIMEMultipart
 import os
 import json
 from datetime import datetime
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
@@ -12,15 +13,47 @@ app.secret_key = 'your-secret-key-here'
 # Ziyaretçi logları için dosya
 VISITOR_LOG_FILE = 'visitor_logs.json'
 
+def get_location_from_ip(ip_address):
+    """IP adresinden konum bilgisi al"""
+    try:
+        # Ücretsiz IP geolocation API'si
+        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=3)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('status') == 'success':
+                return {
+                    'country': data.get('country', 'Unknown'),
+                    'city': data.get('city', 'Unknown'),
+                    'region': data.get('regionName', 'Unknown'),
+                    'timezone': data.get('timezone', 'Unknown'),
+                    'isp': data.get('isp', 'Unknown')
+                }
+    except:
+        pass
+    
+    return {
+        'country': 'Unknown',
+        'city': 'Unknown',
+        'region': 'Unknown',
+        'timezone': 'Unknown',
+        'isp': 'Unknown'
+    }
+
 def log_visitor(ip_address, user_agent, referrer=None):
     """Ziyaretçi bilgilerini logla"""
+    # Konum bilgisini al
+    location = get_location_from_ip(ip_address)
+    
     visitor_data = {
         'ip_address': ip_address,
         'user_agent': user_agent,
         'referrer': referrer,
         'timestamp': datetime.now().isoformat(),
-        'country': 'Unknown',  # İleride IP geolocation eklenebilir
-        'city': 'Unknown'
+        'country': location['country'],
+        'city': location['city'],
+        'region': location['region'],
+        'timezone': location['timezone'],
+        'isp': location['isp']
     }
     
     # Mevcut logları oku
@@ -153,11 +186,32 @@ def view_stats():
     
     top_ips = sorted(ip_counts.items(), key=lambda x: x[1], reverse=True)[:10]
     
+    # En çok ziyaret eden ülkeler
+    country_counts = {}
+    for log in logs:
+        country = log.get('country', 'Unknown')
+        country_counts[country] = country_counts.get(country, 0) + 1
+    
+    top_countries = sorted(country_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    # En çok ziyaret eden şehirler
+    city_counts = {}
+    for log in logs:
+        city = log.get('city', 'Unknown')
+        country = log.get('country', 'Unknown')
+        if city != 'Unknown':
+            city_key = f"{city}, {country}"
+            city_counts[city_key] = city_counts.get(city_key, 0) + 1
+    
+    top_cities = sorted(city_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+    
     stats = {
         'total_visitors': total_visitors,
         'unique_visitors': unique_ips,
         'last_24h': len(last_24h),
-        'top_ips': top_ips
+        'top_ips': top_ips,
+        'top_countries': top_countries,
+        'top_cities': top_cities
     }
     
     return render_template('admin_stats.html', stats=stats)

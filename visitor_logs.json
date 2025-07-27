@@ -1,0 +1,18 @@
+[
+  {
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "referrer": "Direct",
+    "timestamp": "2025-07-27T17:19:36.943467",
+    "country": "Unknown",
+    "city": "Unknown"
+  },
+  {
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+    "referrer": "http://127.0.0.1:5000/admin/stats",
+    "timestamp": "2025-07-27T17:21:33.754362",
+    "country": "Unknown",
+    "city": "Unknown"
+  }
+]

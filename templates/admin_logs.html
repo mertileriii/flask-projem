@@ -63,6 +63,9 @@
                                 <th>🔗 Referrer</th>
                                 <th>🌍 Ülke</th>
                                 <th>🏙️ Şehir</th>
+                                <th>🏛️ Bölge</th>
+                                <th>⏰ Saat Dilimi</th>
+                                <th>🏢 ISP</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,6 +77,9 @@
                                 <td>{{ log.referrer }}</td>
                                 <td>{{ log.country }}</td>
                                 <td>{{ log.city }}</td>
+                                <td>{{ log.region }}</td>
+                                <td>{{ log.timezone }}</td>
+                                <td><small>{{ log.isp[:30] }}...</small></td>
                             </tr>
                             {% endfor %}
                         </tbody>
