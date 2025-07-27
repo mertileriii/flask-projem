@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ziyaretçi Logları - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+        .admin-header {
+            background: #1a1a1a;
+            border-bottom: 2px solid #00ff00;
+            padding: 1rem;
+        }
+        .log-table {
+            background: #000;
+            border: 1px solid #00ff00;
+        }
+        .log-table th {
+            background: #1a1a1a;
+            color: #00ff00;
+            border-color: #00ff00;
+        }
+        .log-table td {
+            border-color: #00ff00;
+            color: #00ffff;
+        }
+        .nav-link {
+            color: #00ff00;
+        }
+        .nav-link:hover {
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1>🔍 Ziyaretçi Logları</h1>
+            <nav class="nav">
+                <a class="nav-link" href="/admin/logs">📋 Loglar</a>
+                <a class="nav-link" href="/admin/stats">📊 İstatistikler</a>
+                <a class="nav-link" href="/">🏠 Ana Sayfa</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2>Son Ziyaretçiler ({{ logs|length }} kayıt)</h2>
+                <div class="table-responsive">
+                    <table class="table table-dark log-table">
+                        <thead>
+                            <tr>
+                                <th>📅 Tarih</th>
+                                <th>🌐 IP Adresi</th>
+                                <th>📱 User Agent</th>
+                                <th>🔗 Referrer</th>
+                                <th>🌍 Ülke</th>
+                                <th>🏙️ Şehir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.timestamp.split('T')[0] }} {{ log.timestamp.split('T')[1][:8] }}</td>
+                                <td><code>{{ log.ip_address }}</code></td>
+                                <td><small>{{ log.user_agent[:50] }}...</small></td>
+                                <td>{{ log.referrer }}</td>
+                                <td>{{ log.country }}</td>
+                                <td>{{ log.city }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

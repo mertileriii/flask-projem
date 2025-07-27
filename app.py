@@ -3,12 +3,61 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
+import json
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
 
+# Ziyaretçi logları için dosya
+VISITOR_LOG_FILE = 'visitor_logs.json'
+
+def log_visitor(ip_address, user_agent, referrer=None):
+    """Ziyaretçi bilgilerini logla"""
+    visitor_data = {
+        'ip_address': ip_address,
+        'user_agent': user_agent,
+        'referrer': referrer,
+        'timestamp': datetime.now().isoformat(),
+        'country': 'Unknown',  # İleride IP geolocation eklenebilir
+        'city': 'Unknown'
+    }
+    
+    # Mevcut logları oku
+    try:
+        with open(VISITOR_LOG_FILE, 'r', encoding='utf-8') as f:
+            logs = json.load(f)
+    except FileNotFoundError:
+        logs = []
+    
+    # Yeni ziyaretçiyi ekle
+    logs.append(visitor_data)
+    
+    # Son 1000 ziyaretçiyi tut (dosya büyümesini önle)
+    if len(logs) > 1000:
+        logs = logs[-1000:]
+    
+    # Logları kaydet
+    with open(VISITOR_LOG_FILE, 'w', encoding='utf-8') as f:
+        json.dump(logs, f, ensure_ascii=False, indent=2)
+
 @app.route('/')
 def main():
+    # Ziyaretçi bilgilerini al
+    ip_address = request.remote_addr
+    
+    # Proxy arkasındaysa gerçek IP'yi al
+    if request.headers.get('X-Forwarded-For'):
+        ip_address = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+    elif request.headers.get('X-Real-IP'):
+        ip_address = request.headers.get('X-Real-IP')
+    
+    user_agent = request.headers.get('User-Agent', 'Unknown')
+    referrer = request.headers.get('Referer', 'Direct')
+    
+    # Ziyaretçiyi logla
+    log_visitor(ip_address, user_agent, referrer)
+    
     return render_template('sitehtml.html')
 
 @app.route('/send-email', methods=['POST'])
@@ -63,6 +112,55 @@ def send_email():
     except Exception as e:
         flash('Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.', 'error')
         return redirect(url_for('main'))
+
+@app.route('/admin/logs')
+def view_logs():
+    """Ziyaretçi loglarını görüntüle"""
+    try:
+        with open(VISITOR_LOG_FILE, 'r', encoding='utf-8') as f:
+            logs = json.load(f)
+    except FileNotFoundError:
+        logs = []
+    
+    # Logları ters sırala (en yeni üstte)
+    logs.reverse()
+    
+    return render_template('admin_logs.html', logs=logs)
+
+@app.route('/admin/stats')
+def view_stats():
+    """Ziyaretçi istatistiklerini görüntüle"""
+    try:
+        with open(VISITOR_LOG_FILE, 'r', encoding='utf-8') as f:
+            logs = json.load(f)
+    except FileNotFoundError:
+        logs = []
+    
+    # İstatistikler
+    total_visitors = len(logs)
+    unique_ips = len(set(log['ip_address'] for log in logs))
+    
+    # Son 24 saat
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    last_24h = [log for log in logs if datetime.fromisoformat(log['timestamp']) > now - timedelta(hours=24)]
+    
+    # En çok ziyaret eden IP'ler
+    ip_counts = {}
+    for log in logs:
+        ip = log['ip_address']
+        ip_counts[ip] = ip_counts.get(ip, 0) + 1
+    
+    top_ips = sorted(ip_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    stats = {
+        'total_visitors': total_visitors,
+        'unique_visitors': unique_ips,
+        'last_24h': len(last_24h),
+        'top_ips': top_ips
+    }
+    
+    return render_template('admin_stats.html', stats=stats)
 
 if __name__ == '__main__':
     app.run(debug=True) 

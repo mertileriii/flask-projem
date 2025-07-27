@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ziyaretçi İstatistikleri - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+        }
+        .admin-header {
+            background: #1a1a1a;
+            border-bottom: 2px solid #00ff00;
+            padding: 1rem;
+        }
+        .stats-card {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ffff;
+        }
+        .nav-link {
+            color: #00ff00;
+        }
+        .nav-link:hover {
+            color: #00ffff;
+        }
+        .ip-table {
+            background: #000;
+            border: 1px solid #00ff00;
+        }
+        .ip-table th {
+            background: #1a1a1a;
+            color: #00ff00;
+            border-color: #00ff00;
+        }
+        .ip-table td {
+            border-color: #00ff00;
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="container">
+            <h1>📊 Ziyaretçi İstatistikleri</h1>
+            <nav class="nav">
+                <a class="nav-link" href="/admin/logs">📋 Loglar</a>
+                <a class="nav-link" href="/admin/stats">📊 İstatistikler</a>
+                <a class="nav-link" href="/">🏠 Ana Sayfa</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3>👥 Toplam Ziyaretçi</h3>
+                    <div class="stats-number">{{ stats.total_visitors }}</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3>🆔 Benzersiz Ziyaretçi</h3>
+                    <div class="stats-number">{{ stats.unique_visitors }}</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <h3>⏰ Son 24 Saat</h3>
+                    <div class="stats-number">{{ stats.last_24h }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="stats-card">
+                    <h3>🏆 En Çok Ziyaret Eden IP'ler</h3>
+                    <div class="table-responsive">
+                        <table class="table table-dark ip-table">
+                            <thead>
+                                <tr>
+                                    <th>🌐 IP Adresi</th>
+                                    <th>📊 Ziyaret Sayısı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ip, count in stats.top_ips %}
+                                <tr>
+                                    <td><code>{{ ip }}</code></td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
