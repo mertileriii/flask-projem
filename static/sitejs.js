@@ -67,8 +67,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Animasyon döngüsü
-    setInterval(drawMatrix, 35);
+    // Animasyon döngüsü - Optimized
+    let lastTime = 0;
+    const frameRate = 50; // Reduced from 35ms to 50ms
+    
+    function animate(currentTime) {
+        if (currentTime - lastTime < frameRate) {
+            requestAnimationFrame(animate);
+            return;
+        }
+        lastTime = currentTime;
+        drawMatrix();
+        requestAnimationFrame(animate);
+    }
+    
+    requestAnimationFrame(animate);
 });
 
 // Mouse takip eden parçacık efekti
@@ -95,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function() {
         constructor(x, y) {
             this.x = x;
             this.y = y;
-            this.vx = (Math.random() - 0.5) * 2;
-            this.vy = (Math.random() - 0.5) * 2;
+            this.vx = (Math.random() - 0.5) * 1.5; // Reduced velocity
+            this.vy = (Math.random() - 0.5) * 1.5;
             this.life = 1;
-            this.decay = 0.02;
+            this.decay = 0.03; // Faster decay
         }
         
         update() {
@@ -118,13 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    let lastParticleTime = 0;
+    const particleRate = 100; // Reduced particle creation rate
+    
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         
-        // Mouse hareketinde parçacık oluştur
-        for (let i = 0; i < 3; i++) {
+        const currentTime = Date.now();
+        if (currentTime - lastParticleTime > particleRate && Math.random() < 0.3) {
             particles.push(new Particle(mouseX, mouseY));
+            lastParticleTime = currentTime;
         }
     });
     

@@ -46,6 +46,7 @@
             box-shadow: 
                 0 0 10px rgba(0, 255, 0, 0.3),
                 0 0 20px rgba(0, 255, 0, 0.2);
+            will-change: transform;
         }
         
         .catalog-card:hover {
@@ -78,11 +79,10 @@
         }
         
         .catalog-card:hover {
-            transform: translateY(-20px) rotateX(15deg) rotateY(10deg) scale(1.05);
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg) scale(1.02);
             box-shadow: 
-                0 30px 60px rgba(0, 255, 0, 0.6),
-                0 0 50px rgba(0, 255, 0, 0.5),
-                inset 0 0 50px rgba(0, 255, 0, 0.4);
+                0 15px 30px rgba(0, 255, 0, 0.4),
+                0 0 25px rgba(0, 255, 0, 0.3);
         }
         
         .catalog-card h2 {
@@ -169,6 +169,8 @@
             height: 100%;
             z-index: -1;
             pointer-events: none;
+            opacity: 0.15;
+            will-change: transform;
         }
         
         /* Ensure content is above matrix effect */
